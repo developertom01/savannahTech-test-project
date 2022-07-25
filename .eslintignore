@@ -1,0 +1,9 @@
+.eslintrc.js
+.prettierrc
+scripts/**
+public/**
+.github/**
+node_modules/**
+src/declarations/**
+t/**
+craco.config.js

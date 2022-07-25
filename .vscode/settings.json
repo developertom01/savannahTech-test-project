@@ -1,0 +1,5 @@
+{
+  "cSpell.words": ["persistor", "prettierrc", "tailwindcss"],
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single"
+}

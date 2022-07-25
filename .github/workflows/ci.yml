@@ -1,0 +1,49 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  unit-test:
+
+    runs-on: ubuntu-latest
+    env:
+      REACT_APP_ENV: test
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: yarn install
+    - run: |
+        yarn make:all
+        yarn test
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup QUMU
+        uses: docker/setup-qemu-action@v1
+
+      -  name: Set up Docker Buildx
+         uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: sarptom/mpharma-test:latest
+    needs: unit-test
